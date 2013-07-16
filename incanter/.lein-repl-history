@@ -1,0 +1,22 @@
+(ns default (:use (incanter core stats charts io)))
+(def url "http://ichart.finance.yahoo.com/table.csv?s=EZA&ql=5&ignore=.csv")
+(def eza (to-matrix (read-dataset url :header true)))
+(view (scatter-plot :High :Low :data eza))
+exit
+(ns examples.CourseraTs
+  (:use (incanter zoo core stats charts io))
+  (:use (clj-time [format :only (formatter formatters parse)] [coerce :only (to-long)]))
+  )
+(def ezaUrl "http://ichart.finance.yahoo.com/table.csv?s=EZA&ql=5&ignore=.csv")
+(def eza (read-dataset ezaUrl :header true))
+(view (scatter-plot :High :Low :data eza))
+(view (scatter-plot :Close (keyword "Adj Close") :data eza))
+(defn dates-long "returns the dates as long" [eza]
+  (let [ymd-formatter (formatters :year-month-day) dates-str ($ :Date eza)]
+    (map #(to-long (parse ymd-formatter %)) dates-str))
+  )
+(def eza-ac ($ (keyword "Adj Close")  eza))
+(def eza-times (dates-long eza))
+(view (time-series-plot eza-times eza-ac :x-label "Date" :y-label "EZA"))
+(def eza.zoo (zoo eza))
+exit
