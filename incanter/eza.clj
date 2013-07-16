@@ -1,4 +1,4 @@
-(ns examples.CourseraTs
+(ns default
   (:use (incanter zoo core stats charts io))
   (:use (clj-time [format :only (formatter formatters parse)] [coerce :only (to-long)]))
   )
