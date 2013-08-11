@@ -5,15 +5,15 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :scm {:name "git" :url "https://github.com/setrar/AfricaWealthProject"}
   :min-lein-version "2.0.0"
-  :dependencies [[incanter/incanter-core "1.5.0-SNAPSHOT"]
-                 [incanter/incanter-io "1.5.0-SNAPSHOT"]
-                 [incanter/incanter-charts "1.5.0-SNAPSHOT"]
-                 [incanter/incanter-mongodb "1.5.0-SNAPSHOT"]
-                 [incanter/incanter-pdf "1.5.0-SNAPSHOT"]
-                 [incanter/incanter-latex "1.5.0-SNAPSHOT"]
-                 [incanter/incanter-excel "1.5.0-SNAPSHOT"]
-                 [incanter/incanter-sql "1.5.0-SNAPSHOT"]
-                 [incanter/incanter-zoo "1.5.0-SNAPSHOT"]
+  :dependencies [[incanter/incanter-core "1.5.2"]
+                 [incanter/incanter-io "1.5.2"]
+                 [incanter/incanter-charts "1.5.2"]
+                 [incanter/incanter-mongodb "1.5.2"]
+                 [incanter/incanter-pdf "1.5.2"]
+                 [incanter/incanter-latex "1.5.2"]
+                 [incanter/incanter-excel "1.5.2"]
+                 [incanter/incanter-sql "1.5.2"]
+                 [incanter/incanter-zoo "1.5.2"]
                  [org.clojure/clojure "1.5.1"]
 		 [org.clojure/data.json "0.2.2"]
                  [swingrepl "1.3.0"
