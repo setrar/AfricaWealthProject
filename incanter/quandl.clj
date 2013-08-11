@@ -6,8 +6,8 @@
           [coerce :only (to-long)])))
 
 ;; Replace with your own token
-(def quandl_token "YOUR TOKEN HERER")
-(def startDate "2013-07-11")
+(def quandl_token "YOUR TOKEN HERE")
+(def startDate "2013-06-11")
 (def endDate "2013-07-10")
 
 (defn same-dates?
@@ -46,7 +46,7 @@
           :header true)
     ;;Date	Open	High	Low	Close	Volume (BTC)	Volume (Currency)	Weighted Price
       (col-names
-        [:Date :Open :High :Low :Close :Volume1 :Volume2 :Adj-Close]))
+        [:index :open :high :low :close :volume1 :volume2 :adj-close]))
     )
   )
 
@@ -56,28 +56,17 @@
 
 (same-dates? aapl btc)	; true
 
-(def aapl-ac ($ :Close aapl))
-(def btc-ac ($ :Adj-Close btc))
+(def aapl-ac ($ :close aapl))
+(def btc-ac ($ :adj-close btc))
 
 (def aapl-times (dates-long aapl))
 (def btc-times (dates-long btc))
 
-(view (time-series-plot aapl-times aapl-ac
-        :x-label "Date"
-        :y-label "AAPL"))
-(view (time-series-plot btc-times btc-ac
-        :x-label "Date"
-        :y-label "BTC"))
+(apply max ($ :adj-close btc))
+(apply min ($ :adj-close btc))
 
-(apply max ($ :Adj-Close btc))
-(apply min ($ :Adj-Close btc))
+;; Pt/Pt-1
+(def btc.div (roll-apply #(apply / %) 2 ($ :adj-close btc)))
+(def btc.z (zoo-apply #(apply / %) 2 btc :adj-close))
 
-(roll-apply #(apply + %) 3 ($ :Adj-Close btc))
-
-(defn difference [lag coll]
-  (incanter.core/minus
-    (drop lag coll) (drop-last lag coll)))
-
-(defn logReturn [lag coll]
-  (incanter.core/log
-    (drop lag coll) (drop-last lag coll)))
+;; This works as Zoo Objects but can't be used with view
