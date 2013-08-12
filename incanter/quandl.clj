@@ -51,7 +51,7 @@
 ;; Running code starts here
 
 ;; Replace with your own token
-(def quandl_token "PUT YOUR TOKEN HERE")
+(def quandl_token "YOUR TOKEN HERE")
 (def startDate "2013-06-11")
 (def endDate "2013-07-10")
 
@@ -71,8 +71,9 @@
 (apply max ($ :adj-close btc))
 (apply min ($ :adj-close btc))
 
-;; Pt/Pt-1
-(def btc.div (roll-apply #(apply / %) 2 ($ :adj-close btc)))
-(def btc.z (zoo-apply #(apply / %) 2 btc :adj-close))
+;; ln(Pt)-ln(Pt-1) returns Zoo object
+(def btc-z (zoo (zoo-apply #(apply - (log %)) 2 btc :adj-close)))
 
 ;; This works as Zoo Objects but can't be used with view
+(view (time-series-plot aapl-times btc-z :x-label "Date" :y-label "AAPL"))
+(view (time-series-plot snp-times snp-ac :x-label "Date" :y-label "SnP"))
