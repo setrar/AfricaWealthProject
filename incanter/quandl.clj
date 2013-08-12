@@ -1,3 +1,7 @@
+"""
+(def mtgoxUSD (get-symbol-from-quandl 'BITCOIN/MTGOXUSD' '2012-01-19' '2012-01-20'))
+(def url 'http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-17&trim_end=2013-07-08&sort_order=desc')
+"""
 (ns default
   (:require [clojure.set :as set])
   (:use (incanter core zoo stats charts io, excel))
@@ -5,11 +9,7 @@
   (:use (clj-time [format :only (formatter formatters parse)]
           [coerce :only (to-long)])))
 
-;; Replace with your own token
-(def quandl_token "YOUR TOKEN HERE")
-(def startDate "2013-06-11")
-(def endDate "2013-07-10")
-
+;; Function Definition
 (defn same-dates?
   "are two datasets covering the same time frame?"
   [x y]
@@ -26,8 +26,6 @@
         dates-str	($ :Date data)]
     (map #(to-long (parse ymd-formatter %)) dates-str)))
 
-;;(def mtgoxUSD (get-symbol-from-quandl "BITCOIN/MTGOXUSD" "2012-01-19" "2012-01-20"))
-;;(def url "http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-17&trim_end=2013-07-08&sort_order=desc")
 (defn get-symbol-from-quandl
   "returns a dataset read from a remote URL given a QUANDL symbol name"
   ;;  ([symbol] (get-symbol-from-yahoo symbol (earlier (joda-date) (period 5 :year)) (joda-date)) (token))
@@ -49,6 +47,14 @@
         [:index :open :high :low :close :volume1 :volume2 :adj-close]))
     )
   )
+
+;; Running code starts here
+
+;; Replace with your own token
+(def quandl_token "PUT YOUR TOKEN HERE")
+(def startDate "2013-06-11")
+(def endDate "2013-07-10")
+
 
 (def btc (get-symbol-from-quandl "BITCOIN/MTGOXUSD" startDate endDate quandl_token))
 (def aapl (get-symbol-from-quandl "GOOG/NASDAQ_AAPL" startDate endDate quandl_token))
