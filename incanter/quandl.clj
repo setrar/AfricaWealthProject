@@ -39,21 +39,19 @@
               "&trim_end=" y1 "-" m1 "-" d1 "&sort_order=desc"
               "&auth_token=" token)]
     (print uri)
-    (-> (read-dataset
-          uri
-          :header true)
-    ;;Date	Open	High	Low	Close	Volume (BTC)	Volume (Currency)	Weighted Price
-      (col-names
-        [:index :open :high :low :close :volume1 :volume2 :adj-close]))
+    (-> (read-dataset uri :header true)
+        ;;Date	Open	High	Low	Close	Volume (BTC)	Volume (Currency)	Weighted Price
+        (col-names [:Date :open :high :low :close :volume1 :volume2 :adj-close])
+      )
     )
   )
 
 ;; Running code starts here
 
 ;; Replace with your own token
-(def quandl_token "YOUR TOKEN HERE")
-(def startDate "2013-06-11")
-(def endDate "2013-07-10")
+(def quandl_token "PUT YOUR OWN")
+(def startDate "2013-07-01")
+(def endDate "2013-09-01")
 
 
 (def btc (get-symbol-from-quandl "BITCOIN/MTGOXUSD" startDate endDate quandl_token))
@@ -62,11 +60,12 @@
 
 (same-dates? aapl btc)	; true
 
+(def aapl-times (dates-long aapl))
 (def aapl-ac ($ :close aapl))
+
+(def btc-times (dates-long btc))
 (def btc-ac ($ :adj-close btc))
 
-(def aapl-times (dates-long aapl))
-(def btc-times (dates-long btc))
 
 (apply max ($ :adj-close btc))
 (apply min ($ :adj-close btc))
@@ -74,6 +73,9 @@
 ;; ln(Pt)-ln(Pt-1) returns Zoo object
 (def btc-z (zoo (zoo-apply #(apply - (log %)) 2 btc :adj-close)))
 
+;; ln(Pt)-ln(Pt-1) returns Regular object
+(def btc-r (roll-apply #(apply - (log %)) 2 ($ :adj-close btc)))
+
 ;; This works as Zoo Objects but can't be used with view
-(view (time-series-plot aapl-times btc-z :x-label "Date" :y-label "AAPL"))
-(view (time-series-plot snp-times snp-ac :x-label "Date" :y-label "SnP"))
+(view (time-series-plot aapl-times aapl-ac :x-label "Date" :y-label "AAPL Simple Returns"))
+(view (time-series-plot btc-times btc-r :x-label "Date" :y-label "BTC Log Returns"))
