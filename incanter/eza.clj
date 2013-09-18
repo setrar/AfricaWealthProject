@@ -42,9 +42,15 @@
 (skewness eza-pdf) ;; -0.3189796307721639
 (kurtosis eza-pdf) ;; 4.233620319575951E-7
 
-(view (histogram eza-pdf))
+(kurtosis (sample-normal 100000))
+(kurtosis (sample-gamma 100000))
+
+(def eza-hist (histogram eza-pdf))
+(save eza-hist "eza-hist.png" :width 1000)
 
 ;; Let's view the Simple Return plot
-(view (time-series-plot eza-times eza-prices :x-label "Date" :y-label "EZA Simple Return"))
+(def eza-sr-plot (time-series-plot eza-times eza-prices :x-label "Date" :y-label "EZA Simple Return"))
+(save eza-sr-plot "eza-sr-plot.png" :width 1000)
 ;; Let's view the Log Return plot
-(view (time-series-plot eza-times eza-pdf :x-label "Date" :y-label "EZA Log Return"))
+(def eza-lr-plot (time-series-plot eza-times eza-pdf :x-label "Date" :y-label "EZA Log Return"))
+(save eza-lr-plot "eza-lr-plot.png" :width 1000)
