@@ -31,6 +31,7 @@
 (view btc-pdf)
 
 ;; Descriptive Statistics
+(head btc-pdf) ;; (-0.006557005809394667 0.093736255674302 0.01672059390461733 -0.15563826915897838 0.01441768330555071
 (mean btc-pdf) ;; 0.006749139231492085
 (variance btc-pdf) ;; 0.005825567863660677
 (sd btc-pdf) ;; 0.07632540772023873
@@ -40,6 +41,4 @@
 (view (histogram btc-pdf))
 (view (time-series-plot btc-times btc-pdf :x-label "Date" :y-label "BTC Log Returns"))
 
-;; Looks wrong
-(max btc-pdf)
-(min btc-pdf)
+
