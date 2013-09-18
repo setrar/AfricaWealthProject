@@ -18,7 +18,13 @@
 (variance btc-pdf)
 (sd btc-pdf)
 (skewness btc-pdf)
+
+;; 387546.04030830524 Looks wrong
 (kurtosis btc-pdf)
 
-
+(view (histogram btc-pdf))
 (view (time-series-plot btc-times btc-pdf :x-label "Date" :y-label "BTC Log Returns"))
+
+;; Looks wrong
+(max btc-pdf)
+(min btc-pdf)
