@@ -7,3 +7,18 @@
 ;; Plot a graph
 (view (scatter-plot :High :Low :data btc))
 
+(view btc)
+
+(def btc-pdf (roll-apply #(apply - (log %)) 2 ($ :Close btc)))
+
+(def btc-times (dates-long btc))
+
+(view btc-pdf)
+(mean btc-pdf)
+(variance btc-pdf)
+(sd btc-pdf)
+(skewness btc-pdf)
+(kurtosis btc-pdf)
+
+
+(view (time-series-plot btc-times btc-pdf :x-label "Date" :y-label "BTC Log Returns"))
