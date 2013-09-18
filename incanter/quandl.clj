@@ -49,7 +49,7 @@
 ;; Running code starts here
 
 ;; Replace with your own token
-(def quandl_token "PUT YOUR OWN")
+(def quandl_token "xTsCAtTSVSk2CtpfmJB9")
 (def startDate "2013-07-01")
 (def endDate "2013-09-01")
 
