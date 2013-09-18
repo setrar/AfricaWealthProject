@@ -4,7 +4,7 @@
 """
 (ns default
   (:require [clojure.set :as set])
-  (:use (incanter core zoo stats charts io, excel))
+  (:use (incanter core zoo stats charts io latex))
   (:require [clj-time.core :as time])
   (:use (clj-time [format :only (formatter formatters parse)]
           [coerce :only (to-long)])))
@@ -70,6 +70,9 @@
 (apply max ($ :adj-close btc))
 (apply min ($ :adj-close btc))
 
+;; log return equation
+(def eq_ln (str "$rt = log ( 1 + R) = log\\left(\\frac{Price(t)}{Price(t-1)}\\right)"))
+
 ;; ln(Pt)-ln(Pt-1) returns Zoo object
 (def btc-z (zoo (zoo-apply #(apply - (log %)) 2 btc :adj-close)))
 
@@ -78,4 +81,35 @@
 
 ;; This works as Zoo Objects but can't be used with view
 (view (time-series-plot aapl-times aapl-ac :x-label "Date" :y-label "AAPL Simple Returns"))
-(view (time-series-plot btc-times btc-r :x-label "Date" :y-label "BTC Log Returns"))
+(view (time-series-plot btc-times btc-ac :x-label "Date" :y-label "BTC Simple Returns"))
+
+(doto (time-series-plot btc-times btc-r :x-label "Date" :y-label "BTC Log Returns")
+      (add-latex-subtitle eq_ln)
+      view)
+
+;; Mean
+(def mu (mean btc-r))
+
+;; Descriptive Statistics
+(view (histogram btc-r))
+(view (box-plot btc-r))
+
+;; Bell Curve Equation
+(def eq (str "$f(x,\\mu ,\\sigma^2) = \\frac{1}{\\sigma \\sqrt{2\\pi}}"
+          "e^{-\\frac{1}{2}(\\frac{x-\\mu}{\\sigma})^2}"))
+
+(doto (function-plot pdf-normal -3 3)
+  (add-latex-subtitle eq)
+  view)
+
+(def x (range -3 3 0.01))
+
+(doto (xy-plot x (pdf-normal x)
+        :title "Normal PDF"
+        :y-label "Density"
+        :legend true)
+  (add-lines x (pdf-normal x :sd (sqrt 0.2)))
+  (add-lines x (pdf-normal x :sd (sqrt 5.0)))
+  (add-lines x (pdf-normal x :mean -2 :sd (sqrt 0.5)))
+  view)
+

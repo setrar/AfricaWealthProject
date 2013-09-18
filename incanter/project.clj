@@ -5,17 +5,18 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :scm {:name "git" :url "https://github.com/setrar/AfricaWealthProject"}
   :min-lein-version "2.0.0"
-  :dependencies [[incanter/incanter-core "1.5.2"]
-                 [incanter/incanter-io "1.5.2"]
-                 [incanter/incanter-charts "1.5.2"]
-                 [incanter/incanter-mongodb "1.5.2"]
-                 [incanter/incanter-pdf "1.5.2"]
-                 [incanter/incanter-latex "1.5.2"]
-                 [incanter/incanter-excel "1.5.2"]
-                 [incanter/incanter-sql "1.5.2"]
-                 [incanter/incanter-zoo "1.5.2"]
+  :dependencies [[incanter/incanter-core "1.5.4"]
+                 [incanter/incanter-io "1.5.4"]
+                 [incanter/incanter-charts "1.5.4"]
+                 [incanter/incanter-mongodb "1.5.4"]
+                 [incanter/incanter-pdf "1.5.4"]
+                 [incanter/incanter-latex "1.5.4"]
+                 [incanter/incanter-excel "1.5.4"]
+                 [incanter/incanter-sql "1.5.4"]
+                 [incanter/incanter-zoo "1.5.4"]
+                 [clj-time "0.6.0"]
                  [org.clojure/clojure "1.5.1"]
-		 [org.clojure/data.json "0.2.2"]
+		             [org.clojure/data.json "0.2.2"]
                  [swingrepl "1.3.0"
                   :exclusions [org.clojure/clojure
                                org.clojure/clojure-contrib]]
@@ -23,7 +24,7 @@
   :plugins [[lein-ritz "0.7.0" :exclusions [org.clojure/clojure]]]
   :profiles {:dev {:resource-paths ["data"]}
              :debug {:debug true}
-             }  
+             }
   :repl-options {:init-ns btc
                  :init (do
                          (set! *print-length* 500)

@@ -1,3 +1,4 @@
+;; Short Version
 ;; In the default package use the below libraries
 (ns default (:use (incanter core stats charts io)))
 ;; Define the MSCI EZA Yahoo URL
