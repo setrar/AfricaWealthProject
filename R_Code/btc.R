@@ -7,8 +7,10 @@
 # Incanter displays 16 digits
 options(digits=16)
 
+
 # Let's play with BTC/USD
-mtgoxusd <- read.csv('http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-17&trim_end=2013-07-08&sort_order=desc', colClasses=c('Date'='Date'))
+url <-'http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-17&trim_end=2013-07-08&sort_order=desc'
+mtgoxusd <- read.csv(url, colClasses=c('Date'='Date'))
 
 # Let's display some data
 plot(mtgoxusd$Date,mtgoxusd$Close)

@@ -25,6 +25,7 @@
 
 (def btc-prices ($ :Close btc))
 (def btc-times (dates-long btc))
+;; Log Return Calculation
 (def btc-pdf (roll-apply #(apply - (log %)) 2 btc-prices))
 
 (view btc-prices)
