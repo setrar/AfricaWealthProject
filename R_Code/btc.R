@@ -29,6 +29,9 @@ library(PerformanceAnalytics)
 skewness(btc.pdf) # -0.05107132946313504
 kurtosis(btc.pdf) # 10.17657793661099
 
+# Displays the histogram
+hist(btc.pdf)
+
 require(zoo)
 require(forecast) 
 btc.times <- as.Date(mtgoxusd$Date,"%Y-%b-%d") 

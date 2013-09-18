@@ -39,6 +39,7 @@
 (kurtosis btc-pdf) ;; 387546.04030830524 Looks very wrong
 
 (view (histogram btc-pdf))
+(view (time-series-plot btc-times btc-prices :x-label "Date" :y-label "BTC Simple Returns"))
 (view (time-series-plot btc-times btc-pdf :x-label "Date" :y-label "BTC Log Returns"))
 
 
