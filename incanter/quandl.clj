@@ -49,7 +49,7 @@
 ;; Running code starts here
 
 ;; Replace with your own token
-(def quandl_token "xTsCAtTSVSk2CtpfmJB9")
+(def quandl_token "PROVIDE YOUR OWN")
 (def startDate "2013-07-01")
 (def endDate "2013-09-01")
 
@@ -73,8 +73,11 @@
 ;; log return equation
 (def eq_ln (str "$rt = log ( 1 + R) = log\\left(\\frac{Price(t)}{Price(t-1)}\\right)"))
 
+;; Convert to Zoo object
+(def btc-zoo (zoo btc :Date))
 ;; ln(Pt)-ln(Pt-1) returns Zoo object
-(def btc-z (zoo (zoo-apply #(apply - (log %)) 2 btc :adj-close)))
+(def btc-z (zoo-apply #(apply - (log %)) 2 btc-zoo :adj-close))
+;; TBD this doesn't work. Zoo needs to be sorted Log is negative
 
 ;; ln(Pt)-ln(Pt-1) returns Regular object
 (def btc-r (roll-apply #(apply - (log %)) 2 ($ :adj-close btc)))
