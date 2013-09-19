@@ -7,19 +7,21 @@
 # Incanter displays 16 digits
 options(digits=16)
 
-
 # Let's play with BTC/USD
-url <-'http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-17&trim_end=2013-07-08&sort_order=desc'
-mtgoxusd <- read.csv(url, colClasses=c('Date'='Date'))
+url <-'http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-01&trim_end=2013-07-01&sort_order=asc'
+btc <- read.csv(url, colClasses=c('Date'='Date'))
 
 # Let's display some data
-plot(mtgoxusd$Date,mtgoxusd$Close)
+plot(btc$Date,btc$Close)
 
 # Close Field will be our reference
-btc.prices <- as.ts(mtgoxusd$Close)
+btc.prices <- as.ts(btc$Close)
+btc.times <- as.Date(bt$Date,"%Y-%b-%d") 
 
 # Log Return Calculation
-btc.pdf <- log(btc.prices)-log(lag(btc.prices))
+btc.pdf <- log(lag(btc.prices))-log(btc.prices)
+# or 
+btc.pdf <- diff(log(btc.prices))
 
 # Descriptive Statistics
 head(btc.pdf)     # -0.006557005809394667  0.093736255674301994  0.016720593904617331 -0.155638269158978382  0.014417683305550710
@@ -36,7 +38,7 @@ hist(btc.pdf)
 
 require(zoo)
 require(forecast) 
-btc.times <- as.Date(mtgoxusd$Date,"%Y-%b-%d") 
+
 btc.z <- zoo(btc.prices,btc.times)
 plot(btc.z, xlab="Date", ylab="BTC Simple Returns")
 

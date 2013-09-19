@@ -1,6 +1,6 @@
 """
 (def mtgoxUSD (get-symbol-from-quandl 'BITCOIN/MTGOXUSD' '2012-01-19' '2012-01-20'))
-(def url 'http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-17&trim_end=2013-07-08&sort_order=desc')
+(def url 'http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-17&trim_end=2013-07-08&sort_order=asc')
 """
 (ns default
   (:require [clojure.set :as set])
@@ -36,7 +36,7 @@
         token yf-token
         uri (str "http://www.quandl.com/api/v1/datasets/" symbol ".csv?"
               "trim_start=" y0 "-" m0 "-" d0
-              "&trim_end=" y1 "-" m1 "-" d1 "&sort_order=desc"
+              "&trim_end=" y1 "-" m1 "-" d1 "&sort_order=asc"
               "&auth_token=" token)]
     (print uri)
     (-> (read-dataset uri :header true)
@@ -79,8 +79,12 @@
 (def btc-z (zoo-apply #(apply - (log %)) 2 btc-zoo :adj-close))
 ;; TBD this doesn't work. Zoo needs to be sorted Log is negative
 
+(view btc-z)
+
 ;; ln(Pt)-ln(Pt-1) returns Regular object
 (def btc-r (roll-apply #(apply - (log %)) 2 ($ :adj-close btc)))
+
+(view btc-r)
 
 ;; This works as Zoo Objects but can't be used with view
 (view (time-series-plot aapl-times aapl-ac :x-label "Date" :y-label "AAPL Simple Returns"))
@@ -92,6 +96,8 @@
 
 ;; Mean
 (def mu (mean btc-r))
+(def var (variance btc-r))
+(def sdv (sd btc-r))
 
 ;; Descriptive Statistics
 (view (histogram btc-r))
@@ -108,11 +114,13 @@
 (def x (range -3 3 0.01))
 
 (doto (xy-plot x (pdf-normal x)
-        :title "Normal PDF"
+;;        :title "Normal PDF"
         :y-label "Density"
         :legend true)
+  (add-latex-subtitle eq)
   (add-lines x (pdf-normal x :sd (sqrt 0.2)))
   (add-lines x (pdf-normal x :sd (sqrt 5.0)))
   (add-lines x (pdf-normal x :mean -2 :sd (sqrt 0.5)))
+  (add-lines x (pdf-normal x :mean mu :sd sdv))
   view)
 

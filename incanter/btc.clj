@@ -16,7 +16,7 @@
 
 ;; Define the MSCI EZA Yahoo URL
 ;; Fetch the data
-(def url "http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-17&trim_end=2013-07-08&sort_order=desc")
+(def url "http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-01&trim_end=2013-07-01&sort_order=asc")
 (def btc (read-dataset url :header true))
 
 ;; Plot graph and view data
@@ -43,4 +43,10 @@
 (view (time-series-plot btc-times btc-prices :x-label "Date" :y-label "BTC Simple Returns"))
 (view (time-series-plot btc-times btc-pdf :x-label "Date" :y-label "BTC Log Returns"))
 
+(tail btc-pdf)
 
+(def btc-zoo (zoo btc :Date))
+;; ln(Pt)-ln(Pt-1) returns Zoo object
+(def btc-z (zoo-apply #(apply - (log %)) 2 btc-zoo :Close))
+
+(view btc-z)
