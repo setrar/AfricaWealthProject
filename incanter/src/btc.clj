@@ -31,17 +31,17 @@
 ;; Issue with zoo when row is null
 (def btc-r ($ [:not 0] :all btc-r))
 
+(view btc-r)
 
 ;; Descriptive Statistics
 (def btc-lr ($ :Close btc-r))
-(variance btc-lr) ;; 0.005825567863660677
-(sd btc-lr) ;; 0.07632540772023873
-(skewness btc-lr) ;; -0.051000870058728595
-(kurtosis btc-lr) ;; 387546.04030830524 Looks very wrong
+(mean btc-lr) ;; 0.006929153189399101
+(variance btc-lr) ;; 0.005812258211367765
+(sd btc-lr) ;; 0.07623816768107537
+(skewness btc-lr) ;; -0.04491679240743672
+(kurtosis btc-lr) ;; 392704.64840013976 Looks very wrong
 
 ;; Displaying the data
 (view (histogram btc-lr))
 (view (time-series-plot (dates-long btc) ($ :Close btc-z) :x-label "Date" :y-label "BTC Simple Returns"))
 (view (time-series-plot (dates-long btc) ($ :Close btc-r) :x-label "Date" :y-label "BTC Log Returns"))
-
-(nrow btc-r)
