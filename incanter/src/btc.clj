@@ -28,21 +28,20 @@
 ;;(def btc-div (zoo-apply #(apply - (div %)) 2 btc-zoo :Close))
 ;;(def btc-r (zoo-apply #(apply log %) 1 btc-div :Close))
 (def btc-r (zoo-apply #(apply log %) 1 (zoo-apply #(apply / (div %)) 2 btc-z :Close) :Close))
+;; Issue with zoo when row is null
+(def btc-r ($ [:not 0] :all btc-r))
+
+
+;; Descriptive Statistics
+(def btc-lr ($ :Close btc-r))
+(variance btc-lr) ;; 0.005825567863660677
+(sd btc-lr) ;; 0.07632540772023873
+(skewness btc-lr) ;; -0.051000870058728595
+(kurtosis btc-lr) ;; 387546.04030830524 Looks very wrong
 
 ;; Displaying the data
+(view (histogram btc-lr))
 (view (time-series-plot (dates-long btc) ($ :Close btc-z) :x-label "Date" :y-label "BTC Simple Returns"))
 (view (time-series-plot (dates-long btc) ($ :Close btc-r) :x-label "Date" :y-label "BTC Log Returns"))
 
-
-(def btc-prices ($ :Close btc-z))
-(def btc-times (dates-long btc))
-;; Issue with zoo when row is null
-(def btc-pdf ($ :Close btc-r))
-
-;; Descriptive Statistics
-(variance btc-prices) ;; 0.005825567863660677
-(sd btc-prices) ;; 0.07632540772023873
-(skewness btc-prices) ;; -0.051000870058728595
-(kurtosis btc-prices) ;; 387546.04030830524 Looks very wrong
-
-(view (histogram btc-prices))
+(nrow btc-r)
