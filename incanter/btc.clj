@@ -14,39 +14,35 @@
         dates-str	($ :Date data)]
     (map #(to-long (parse ymd-formatter %)) dates-str)))
 
-;; Define the MSCI EZA Yahoo URL
-;; Fetch the data
+;; Define the Quandl MtGox BTC/USD
+;; Fetch the data always in Ascending Order
 (def url "http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-01&trim_end=2013-07-01&sort_order=asc")
 (def btc (read-dataset url :header true))
 
-;; Plot graph and view data
-(view (scatter-plot :High :Low :data btc))
-(view btc)
+;; Convert to Zoo object
+(def btc-z (zoo btc :Date))
+;; ln(Pt)-ln(Pt-1) returns Zoo object
+;; This is mostly 2 operations to reach ln(1/Pt-1 / 1/Pt)   pt-1 = 97.51 and Pt = 88.05
+;; 1) Roll Apply (/ (div 97.51) (div 88.05) where is the inverse
+;; 2) Apply (log from 1)
+;;(def btc-div (zoo-apply #(apply - (div %)) 2 btc-zoo :Close))
+;;(def btc-r (zoo-apply #(apply log %) 1 btc-div :Close))
+(def btc-r (zoo-apply #(apply log %) 1 (zoo-apply #(apply / (div %)) 2 btc-z :Close) :Close))
 
-(def btc-prices ($ :Close btc))
+;; Displaying the data
+(view (time-series-plot (dates-long btc) ($ :Close btc-z) :x-label "Date" :y-label "BTC Simple Returns"))
+(view (time-series-plot (dates-long btc) ($ :Close btc-r) :x-label "Date" :y-label "BTC Log Returns"))
+
+
+(def btc-prices ($ :Close btc-z))
 (def btc-times (dates-long btc))
-;; Log Return Calculation
-(def btc-pdf (roll-apply #(apply - (log %)) 2 btc-prices))
-
-(view btc-prices)
-(view btc-pdf)
+;; Issue with zoo when row is null
+(def btc-pdf ($ :Close btc-r))
 
 ;; Descriptive Statistics
-(head btc-pdf) ;; (-0.006557005809394667 0.093736255674302 0.01672059390461733 -0.15563826915897838 0.01441768330555071
-(mean btc-pdf) ;; 0.006749139231492085
-(variance btc-pdf) ;; 0.005825567863660677
-(sd btc-pdf) ;; 0.07632540772023873
-(skewness btc-pdf) ;; -0.051000870058728595
-(kurtosis btc-pdf) ;; 387546.04030830524 Looks very wrong
+(variance btc-prices) ;; 0.005825567863660677
+(sd btc-prices) ;; 0.07632540772023873
+(skewness btc-prices) ;; -0.051000870058728595
+(kurtosis btc-prices) ;; 387546.04030830524 Looks very wrong
 
-(view (histogram btc-pdf))
-(view (time-series-plot btc-times btc-prices :x-label "Date" :y-label "BTC Simple Returns"))
-(view (time-series-plot btc-times btc-pdf :x-label "Date" :y-label "BTC Log Returns"))
-
-(tail btc-pdf)
-
-(def btc-zoo (zoo btc :Date))
-;; ln(Pt)-ln(Pt-1) returns Zoo object
-(def btc-z (zoo-apply #(apply - (log %)) 2 btc-zoo :Close))
-
-(view btc-z)
+(view (histogram btc-prices))

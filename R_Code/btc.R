@@ -7,7 +7,7 @@
 # Incanter displays 16 digits
 options(digits=16)
 
-# Let's play with BTC/USD
+# Let's play with BTC/USD, Always in ascending order
 url <-'http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-01&trim_end=2013-07-01&sort_order=asc'
 btc <- read.csv(url, colClasses=c('Date'='Date'))
 
@@ -16,33 +16,31 @@ plot(btc$Date,btc$Close)
 
 # Close Field will be our reference
 btc.prices <- as.ts(btc$Close)
-btc.times <- as.Date(bt$Date,"%Y-%b-%d") 
-
-# Log Return Calculation
-btc.pdf <- log(lag(btc.prices))-log(btc.prices)
-# or 
-btc.pdf <- diff(log(btc.prices))
-
-# Descriptive Statistics
-head(btc.pdf)     # -0.006557005809394667  0.093736255674301994  0.016720593904617331 -0.155638269158978382  0.014417683305550710
-mean(btc.pdf)     # 0.006749139231492089
-var(btc.pdf)      # 0.005825567863660683
-sd(btc.pdf)       # 0.07632540772023877
-
-library(PerformanceAnalytics)
-skewness(btc.pdf) # -0.05107132946313504
-kurtosis(btc.pdf) # 10.17657793661099
-
-# Displays the histogram
-hist(btc.pdf)
+btc.times <- as.Date(btc$Date,"%Y-%b-%d") 
 
 require(zoo)
 require(forecast) 
 
+# Let's convert to zoo Object
+# It's easier to work with daily data
 btc.z <- zoo(btc.prices,btc.times)
 plot(btc.z, xlab="Date", ylab="BTC Simple Returns")
 
-btc.r <- zoo(btc.pdf,btc.times)
+# Log Return Calculation
+btc.r <- diff(log(btc.z))
 plot(btc.r, xlab="Date", ylab="BTC Log Returns")
 
+# Displays the histogram
+hist(btc.r)
+
+# Descriptive Statistics
+tail(btc.r)     #           2013-06-30           2013-07-01 
+                #  0.02608857161767820 -0.10205010190481199 
+mean(btc.r)     # 0.006929153189399093
+var(btc.r)      # 0.005812258211367765
+sd(btc.r)       # 0.07623816768107537
+
+library(PerformanceAnalytics)
+skewness(btc.r) # -0.04497924912362074
+kurtosis(btc.r) # 10.29118737978867
 
