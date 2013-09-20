@@ -24,11 +24,11 @@ require(forecast)
 # Let's convert to zoo Object
 # It's easier to work with daily data
 btc.z <- zoo(btc.prices,btc.times)
-plot(btc.z, xlab="Date", ylab="BTC Simple Returns")
+plot(btc.z, xlab="Date", ylab="BTC Simple Returns", col = "red")
 
 # Log Return Calculation
 btc.r <- diff(log(btc.z))
-plot(btc.r, xlab="Date", ylab="BTC Log Returns")
+plot(btc.r, xlab="Date", ylab="BTC Log Returns", col = "red")
 
 # Displays the histogram
 hist(btc.r)
