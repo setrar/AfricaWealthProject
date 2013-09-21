@@ -14,6 +14,22 @@
         dates-str	($ :Date data)]
     (map #(to-long (parse ymd-formatter %)) dates-str)))
 
+(defn log-return
+  "returns log returns following ln(Pt)-ln(Pt-1)
+   This is mostly 2 operations to reach ln(1/Pt-1 / 1/Pt)   pt-1 = 97.51 and Pt = 88.05
+   1) Roll Apply (/ (div 97.51) (div 88.05) where is the inverse
+   2) Apply (log from 1)
+       (def btc-div (zoo-apply #(apply - (div %)) 2 btc-zoo :Close))
+       (def btc-r (zoo-apply #(apply log %) 1 btc-div :Close))
+   3) Issue with zoo when row is null
+  "
+  [z coll]
+  ;; A little bit complicated and spreading in multiple lines
+  ;; would be better
+  ($ [:not 0] :all (zoo-apply #(apply log %) 1 (zoo-apply #(apply / (div %)) 2 z coll) coll))
+  )
+
+
 ;; Define the Quandl MtGox BTC/USD
 ;; Fetch the data always in Ascending Order
 (def url "http://www.quandl.com/api/v1/datasets/BITCOIN/MTGOXUSD.csv?&trim_start=2010-07-01&trim_end=2013-07-01&sort_order=asc")
@@ -21,15 +37,7 @@
 
 ;; Convert to Zoo object
 (def btc-z (zoo btc :Date))
-;; ln(Pt)-ln(Pt-1) returns Zoo object
-;; This is mostly 2 operations to reach ln(1/Pt-1 / 1/Pt)   pt-1 = 97.51 and Pt = 88.05
-;; 1) Roll Apply (/ (div 97.51) (div 88.05) where is the inverse
-;; 2) Apply (log from 1)
-;;(def btc-div (zoo-apply #(apply - (div %)) 2 btc-zoo :Close))
-;;(def btc-r (zoo-apply #(apply log %) 1 btc-div :Close))
-(def btc-r (zoo-apply #(apply log %) 1 (zoo-apply #(apply / (div %)) 2 btc-z :Close) :Close))
-;; Issue with zoo when row is null
-(def btc-r ($ [:not 0] :all btc-r))
+(def btc-r (log-return btc-z :Close))
 
 (view btc-r)
 
